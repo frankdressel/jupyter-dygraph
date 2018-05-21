@@ -9,7 +9,7 @@ For instructions on how to use: See [jupyter-dygraphs.ipynb](jupyter-dygraphs.ip
 
 ## Installation
 
-pip3 install git+https://github.com/frankdressel/jupyter_dygraphs.git#egg=jupyter_dygraphs
+pip install git+https://github.com/frankdressel/jupyter_dygraphs.git#egg=jupyter_dygraphs
 
 ## References
 The example file temperatures.csv is taken from http://dygraphs.com/tutorial.html
