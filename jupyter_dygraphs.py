@@ -8,7 +8,7 @@ import pandas
 
 from IPython.display import HTML
 
-def dygraphplot(dataframe, options={"legend":"always"}):
+def dygraphplot(*dataframe, options={"legend":"always"}):
     """
     Plots the given dataframe in a jupyter notebook cell.
 
@@ -19,31 +19,35 @@ def dygraphplot(dataframe, options={"legend":"always"}):
 
         options: A dict containing the dygraph config options.
     """
-    # Check all but the first columns. According to dygraphs spec, these columns must contain
-    # numeric values.
-    for col in dataframe.columns.values[1:]:
-        try:
-            pandas.to_numeric(dataframe[col])
-        except:
-            raise Exception("Dataframe contains non-numeric column: {}".format(col))
     html = """
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css">
-    <div id="{0}"></div>
-    <script type="text/javascript">
-        requirejs.config({{
-            paths: {{
-                "Dygraph": ["//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min"]
-            }}
-        }});
+    """
+    for df in dataframe:
+        # Check all but the first columns. According to dygraphs spec, these columns must contain
+        # numeric values.
+        for col in df.columns.values[1:]:
+            try:
+                pandas.to_numeric(df[col])
+            except:
+                raise Exception("Dataframe contains non-numeric column: {}".format(col))
 
-        require(['Dygraph'], function(Dygraph){{
-            new Dygraph(document.getElementById("{0}"), "{1}", {2})
-        }})
-    </script>
-    """.format(
-        uuid.uuid4(),
-        dataframe.to_csv(index=False).replace("\n", "\\n\"+\""),
-        json.dumps(options)
-    )
+        html = html+"""
+        <div id="{0}"></div>
+        <script type="text/javascript">
+            requirejs.config({{
+                paths: {{
+                    "Dygraph": ["//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min"]
+                }}
+            }});
+
+            require(['Dygraph'], function(Dygraph){{
+                new Dygraph(document.getElementById("{0}"), "{1}", {2})
+            }})
+        </script>
+        """.format(
+            uuid.uuid4(),
+            df.to_csv(index=False).replace("\n", "\\n\"+\""),
+            json.dumps(options)
+        )
 
     return HTML(html)
