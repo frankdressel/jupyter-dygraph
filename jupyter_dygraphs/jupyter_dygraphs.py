@@ -8,21 +8,26 @@ import pandas
 
 from IPython.display import HTML
 
-def dygraphplot(*dataframe, options={"legend":"always"}):
+def dygraphplot(*dataframeandoptions):
     """
     Plots the given dataframe in a jupyter notebook cell.
 
     Keyword arguments:
-        dataframe: The input data for the plot. The first column contains the x-axis data, while
+        dataframe: The input data for the plot. The input data is given as a dict. It contains the
+        pandas.DataFrame as value for key 'df' and an optional dict as value for the key 'opt'.
+
+        The first column of the data frame contains the x-axis data, while
         the remaining columns contain the series data. All columns except the first one needs to
         be parseable to numeric.
 
-        options: A dict containing the dygraph config options.
+        The dict contains the dygraph config options.
     """
     html = """
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css">
     """
-    for df in dataframe:
+    for dfandoptions in dataframeandoptions:
+        df = dfandoptions['df']
+        options = dfandoptions.get('opt', {'legend': 'always'})
         # Check all but the first columns. According to dygraphs spec, these columns must contain
         # numeric values.
         for col in df.columns.values[1:]:
