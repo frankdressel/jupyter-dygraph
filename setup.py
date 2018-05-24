@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="jupyter_dygraphs",
-    version="0.0.2",
+    version="0.0.3",
     author="Frank Dressel",
     description="simplifying dygraph graphs for jupyter",
     url="https://github.com/frankdressel/jupyter_dygraphs",
